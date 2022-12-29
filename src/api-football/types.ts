@@ -1,0 +1,47 @@
+export interface FixturesResponseModel {
+  response: ReadonlyArray<{
+    fixture: {
+      id: number;
+    };
+    league: {
+      id: number;
+    }
+    teams: {
+      home: {
+        id: number;
+        name: string;
+      };
+      away: {
+        id: number;
+        name: string;
+      };
+    };
+    score: {
+      fulltime: {
+        home: number;
+        away: number;
+      };
+    };
+  }>;
+}
+
+export type FixtureEvent =
+  | {
+      player: {
+        name: string | null;
+      };
+      team: {
+        id: number;
+        name: string;
+      };
+      type: 'Goal';
+      detail: 'Normal Goal' | 'Own Goal';
+    }
+  | {
+      type: 'Card';
+      detail: 'Yellow Card';
+    }
+
+export interface FixtureEventResponseModel {
+  response: ReadonlyArray<FixtureEvent>;
+}
