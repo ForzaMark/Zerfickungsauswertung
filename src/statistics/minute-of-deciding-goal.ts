@@ -1,23 +1,10 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { FixtureEvent } from '../api-football/types';
 import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types';
+import { Statistic } from './types/types';
+import { calculateMinuteOfDecidingGoal } from './util/calculate-minute-of-deciding-goal';
+import { isGoalEvent } from './util/is-goal-event';
 
-export interface GoalEvent {
-  time: {
-    elapsed: number;
-  };
-  player: {
-    id: number;
-    name: string;
-  };
-  team: {
-    id: number;
-    name: string;
-  };
-  type: 'Goal';
-  detail: 'Normal Goal' | 'Own Goal';
-}
+
 
 export function createMinuteOfDecidingGoal(): Statistic {
   return {
@@ -83,46 +70,4 @@ function getMinuteOfDecidingGoal(
       detailedCalculations
     }
   };
-}
-
-function isGoalEvent(event: FixtureEvent): event is GoalEvent {
-  return event.type === 'Goal';
-}
-
-export function calculateMinuteOfDecidingGoal(
-  winningTeamId: number,
-  events: ReadonlyArray<GoalEvent>
-): { minuteOfDecidingGoal: number; minuteOfFirstGoal: number } | undefined {
-  const result = events.reduce(
-    ({ currentDifference, minuteOfDecidingGoal, minuteOfFirstGoal }, curr) => {
-      const isWinningTeamGoal = curr.team.id === winningTeamId;
-
-      const updatedCurrentDifference = isWinningTeamGoal
-        ? currentDifference + 1
-        : currentDifference - 1;
-
-      return {
-        currentDifference: updatedCurrentDifference,
-        minuteOfDecidingGoal:
-          updatedCurrentDifference === 6 ? curr.time.elapsed : minuteOfDecidingGoal,
-        minuteOfFirstGoal: minuteOfFirstGoal || curr.time.elapsed
-      };
-    },
-    {
-      minuteOfDecidingGoal: undefined,
-      minuteOfFirstGoal: undefined,
-      currentDifference: 0
-    } as {
-      currentDifference: number;
-      minuteOfDecidingGoal: number | undefined;
-      minuteOfFirstGoal: number | undefined;
-    }
-  );
-
-  return result.minuteOfDecidingGoal && result.minuteOfFirstGoal
-    ? {
-        minuteOfDecidingGoal: result.minuteOfDecidingGoal,
-        minuteOfFirstGoal: result.minuteOfFirstGoal
-      }
-    : undefined;
 }

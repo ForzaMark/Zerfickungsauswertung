@@ -1,6 +1,5 @@
-import { extractGameInformationFromTweet } from '../support/extract-game-information-from-tweet';
 import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types';
+import { Statistic } from './types/types';
 
 export function createMostGamesWonByTeam(): Statistic {
   return {
@@ -14,10 +13,8 @@ function getMostGamesWonByTeam(allTweets: ReadonlyArray<NormalisedTweetResult>):
   tweetText: string;
   additionalInformation: unknown;
 } {
-  const leaguesByOccurrence = allTweets.reduce((acc, { tweet }) => {
-    const { homeScore, awayScore, homeTeam, awayTeam } = extractGameInformationFromTweet(
-      tweet.text
-    );
+  const leaguesByOccurrence = allTweets.reduce((acc, { game }) => {
+    const { homeScore, awayScore, homeTeam, awayTeam } = game;
     const looser = homeScore > awayScore ? homeTeam : awayTeam;
     const isLoserAlredyDefined = typeof acc[looser] === 'number';
 

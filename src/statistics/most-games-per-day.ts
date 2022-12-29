@@ -1,5 +1,5 @@
 import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types';
+import { Statistic } from './types/types';
 
 export function createMostGamesPerDay(): Statistic {
   return {

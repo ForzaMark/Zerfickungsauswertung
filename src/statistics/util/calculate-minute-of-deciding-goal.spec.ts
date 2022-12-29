@@ -1,4 +1,5 @@
-import { calculateMinuteOfDecidingGoal, GoalEvent } from './minute-of-deciding-goal';
+import { GoalEvent } from '../types/types';
+import { calculateMinuteOfDecidingGoal } from './calculate-minute-of-deciding-goal';
 
 interface TestCase {
   input: { events: ReadonlyArray<GoalEvent>; winningSideId: number };

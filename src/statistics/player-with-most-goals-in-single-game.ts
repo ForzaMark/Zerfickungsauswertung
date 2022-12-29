@@ -1,20 +1,7 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { FixtureEvent } from '../api-football/types';
 import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types';
-
-interface GoalEvent {
-  player: {
-    id: number;
-    name: string;
-  };
-  team: {
-    id: number;
-    name: string;
-  };
-  type: 'Goal';
-  detail: 'Normal Goal' | 'Own Goal';
-}
+import { GoalEvent, Statistic } from './types/types';
+import { isGoalEvent } from './util/is-goal-event';
 
 export function createGetPlayerWithMostGoalsInSingleGame(): Statistic {
   return {
@@ -75,10 +62,6 @@ function getPlayerWithMostGoalsInSingleGame(
     tweetText: `Der single Zerficker: ${filtered[0][0]} + Fenna Kalma bei den Frauen mit 6 Toren`,
     additionalInformation: filtered
   };
-}
-
-function isGoalEvent(event: FixtureEvent): event is GoalEvent {
-  return event.type === 'Goal';
 }
 
 function isTeamEvent(goalEvent: GoalEvent, teamId: number) {

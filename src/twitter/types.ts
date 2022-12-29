@@ -24,6 +24,8 @@ export type AllTweetsOutputModel = {
     game: {
       homeScore: number;
       awayScore: number;
+      homeTeam: string;
+      awayTeam: string;
     };
     tweet: Tweet;
   };

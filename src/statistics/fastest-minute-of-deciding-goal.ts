@@ -1,24 +1,8 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { FixtureEvent } from '../api-football/types';
 import { NormalisedTweetResult } from '../twitter/types';
-import { calculateMinuteOfDecidingGoal } from './minute-of-deciding-goal';
-import { Statistic } from './types';
-
-export interface GoalEvent {
-  time: {
-    elapsed: number;
-  };
-  player: {
-    id: number;
-    name: string;
-  };
-  team: {
-    id: number;
-    name: string;
-  };
-  type: 'Goal';
-  detail: 'Normal Goal' | 'Own Goal';
-}
+import { Statistic } from './types/types';
+import { calculateMinuteOfDecidingGoal } from './util/calculate-minute-of-deciding-goal';
+import { isGoalEvent } from './util/is-goal-event';
 
 export function createFastestDecidingGoal(): Statistic {
   return {
@@ -105,8 +89,4 @@ function getFastestDecidingGoal(
       latestFitlered: latestFitlered
     }
   };
-}
-
-function isGoalEvent(event: FixtureEvent): event is GoalEvent {
-  return event.type === 'Goal';
 }

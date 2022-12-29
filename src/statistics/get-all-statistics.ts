@@ -15,7 +15,7 @@ import { createGetMostPopular } from './most-popular';
 import { createGetNumberOfGames } from './number-of-games';
 import { createGetPlayerWithMostGoalsInAllGames } from './player-with-most-goals-in-all-games';
 import { createGetPlayerWithMostGoalsInSingleGame } from './player-with-most-goals-in-single-game';
-import { Statistic } from './types';
+import { Statistic } from './types/types';
 import { createWinsFromBehind } from './wins-from-behind';
 import { createZeroGoalsAgainst } from './zero-goals-against-games';
 

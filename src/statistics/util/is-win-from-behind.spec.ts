@@ -1,5 +1,5 @@
-import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { isWinFromBehind } from './wins-from-behind';
+import { FixtureAndEventsResponseModel } from '../../api-football/query-api-football';
+import { isWinFromBehind } from './is-win-from-behind';
 
 interface TestCase {
   input: FixtureAndEventsResponseModel['fixtures'][number];
@@ -38,10 +38,14 @@ const data: FixtureAndEventsResponseModel['fixtures'][number] = {
         name: 'Stjarnan'
       },
       player: {
+        id: 1,
         name: 'E. Atlason'
       },
       type: 'Goal',
-      detail: 'Normal Goal'
+      detail: 'Normal Goal',
+      time: {
+        elapsed: 1
+      }
     },
     {
       team: {
@@ -49,10 +53,14 @@ const data: FixtureAndEventsResponseModel['fixtures'][number] = {
         name: 'Stjarnan'
       },
       player: {
+        id: 1,
         name: 'O. Orn'
       },
       type: 'Goal',
-      detail: 'Normal Goal'
+      detail: 'Normal Goal',
+      time: {
+        elapsed: 1
+      }
     },
     {
       team: {
@@ -60,10 +68,14 @@ const data: FixtureAndEventsResponseModel['fixtures'][number] = {
         name: 'Stjarnan'
       },
       player: {
+        id: 1,
         name: 'I. A. Sigurgeirsson'
       },
       type: 'Goal',
-      detail: 'Normal Goal'
+      detail: 'Normal Goal',
+      time: {
+        elapsed: 1
+      }
     },
     {
       team: {
@@ -71,10 +83,14 @@ const data: FixtureAndEventsResponseModel['fixtures'][number] = {
         name: 'Stjarnan'
       },
       player: {
+        id: 1,
         name: null
       },
       type: 'Goal',
-      detail: 'Normal Goal'
+      detail: 'Normal Goal',
+      time: {
+        elapsed: 1
+      }
     },
     {
       team: {
@@ -82,10 +98,14 @@ const data: FixtureAndEventsResponseModel['fixtures'][number] = {
         name: 'Stjarnan'
       },
       player: {
+        id: 1,
         name: 'E. A. Gudmundsson'
       },
       type: 'Goal',
-      detail: 'Normal Goal'
+      detail: 'Normal Goal',
+      time: {
+        elapsed: 1
+      }
     },
     {
       team: {
@@ -93,10 +113,14 @@ const data: FixtureAndEventsResponseModel['fixtures'][number] = {
         name: 'Stjarnan'
       },
       player: {
+        id: 1,
         name: 'J. Laxdal'
       },
       type: 'Goal',
-      detail: 'Normal Goal'
+      detail: 'Normal Goal',
+      time: {
+        elapsed: 1
+      }
     }
   ]
 };

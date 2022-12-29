@@ -1,5 +1,5 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { Statistic } from './types';
+import { Statistic } from './types/types';
 import leagueLookup from '../api-football/api-football-league.lookup.json';
 import { NormalisedTweetResult } from '../twitter/types';
 
