@@ -1,7 +1,8 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
 import { FixtureEvent } from '../api-football/types';
+import { NormalisedTweetResult } from '../twitter/types';
 import { calculateMinuteOfDecidingGoal } from './minute-of-deciding-goal';
-import { NormalisedTweetResult, Statistic } from './types';
+import { Statistic } from './types';
 
 export interface GoalEvent {
   time: {

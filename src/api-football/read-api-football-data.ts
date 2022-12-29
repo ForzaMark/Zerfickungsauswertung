@@ -7,7 +7,7 @@ export function readApiFootballData(): ReadonlyArray<FixtureAndEventsResponseMod
 }
 
 function readFixturesWithEvents() {
-  const path = join(__dirname, './all-fixtures-and-events.json');
+  const path = join(__dirname, '../../data-files/all-fixtures-and-events.json');
 
   return JSON.parse(readFileSync(path, 'utf-8'));
 }

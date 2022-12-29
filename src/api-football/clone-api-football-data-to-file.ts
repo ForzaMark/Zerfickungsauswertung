@@ -6,6 +6,8 @@ import {
 } from './query-api-football';
 
 export async function cloneApiFootballDataToFile(allDates: ReadonlySet<string>, apiKey: string) {
+  console.log('FETCH API-FOOTBALL');
+  
   const result: Array<FixtureAndEventsResponseModel> = [];
 
   let requestRateLimit = 0;
@@ -15,7 +17,7 @@ export async function cloneApiFootballDataToFile(allDates: ReadonlySet<string>, 
     let withEvents: FixtureAndEventsResponseModel;
 
     if (requestRateLimit > 250) {
-      writeToFile(result, `./temp-data/${currentRequestNumber}.json`);
+      writeToFile(result, `temp-data/${currentRequestNumber}.json`);
       const delay = delayPromise(60000);
       withEvents = await delay.then(() =>
         getEventsOfAllFixturesOfDate(new Date(day), apiKey)
@@ -33,5 +35,5 @@ export async function cloneApiFootballDataToFile(allDates: ReadonlySet<string>, 
     result.push(withEvents);
   }
 
-  writeToFile(result, './all-fixtures-and-events.json');
+  writeToFile(result, 'all-fixtures-and-events.json');
 }

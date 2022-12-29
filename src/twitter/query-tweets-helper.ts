@@ -1,7 +1,7 @@
-import { AllTweetsOutputModel, NormalisedTweetResult, Tweet } from '../statistics/types';
 import { createQueryUrl } from './create-request-url';
 import { extractGameInformationFromTweet } from '../support/extract-game-information-from-tweet';
 import axios from 'axios';
+import { AllTweetsOutputModel, NormalisedTweetResult, Tweet } from './types';
 
 type Pagination =
   | {

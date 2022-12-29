@@ -1,5 +1,6 @@
 import { extractGameInformationFromTweet } from '../support/extract-game-information-from-tweet';
-import { NormalisedTweetResult, Statistic } from './types';
+import { NormalisedTweetResult } from '../twitter/types';
+import { Statistic } from './types';
 
 export function createMostGamesLostByTeam(): Statistic {
   return {
