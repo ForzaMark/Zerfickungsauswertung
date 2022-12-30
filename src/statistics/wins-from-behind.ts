@@ -1,6 +1,7 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
 import { NormalisedTweetResult } from '../twitter/types';
 import { Statistic } from './types/types';
+import { isGoalEvent } from './util/is-goal-event';
 import { isWinFromBehind } from './util/is-win-from-behind';
 
 export function createWinsFromBehind(): Statistic {
@@ -19,10 +20,18 @@ function getGameWithWinFromBehind(
 } {
   const winsFromBehind = allFixturesWithEvents
     .flatMap((fixturesAndEvents) => fixturesAndEvents.fixtures)
-    .filter((fixture) => isWinFromBehind(fixture));
+    .filter((fixture) => {
+      const winningSideId =
+        fixture.fixture.score.fulltime.home > fixture.fixture.score.fulltime.away
+          ? fixture.fixture.teams.home.id
+          : fixture.fixture.teams.away.id;
+
+      const goalEvents = fixture.events.filter(isGoalEvent);
+
+      return isWinFromBehind(goalEvents, winningSideId);
+    });
 
   return {
     tweetText: `Anzahl Zerfickungen nach Rückstand: ${winsFromBehind.length}`
   };
 }
-
