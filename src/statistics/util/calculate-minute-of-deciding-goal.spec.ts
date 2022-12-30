@@ -1,190 +1,120 @@
 import { GoalEvent } from '../types/types';
 import { calculateMinuteOfDecidingGoal } from './calculate-minute-of-deciding-goal';
 
+interface TestGoalEvent {
+  timeElapsed: number;
+  team: 'winnerTeam' | 'looserTeam';
+}
+
 interface TestCase {
-  input: { events: ReadonlyArray<GoalEvent>; winningSideId: number };
+  description: string;
+  input: {
+    goalEvents: ReadonlyArray<TestGoalEvent>;
+  };
   expected: number;
 }
 
-const baseGoalEvent: GoalEvent = {
-  detail: 'Normal Goal',
-  type: 'Goal',
-  time: {
-    elapsed: 0
-  },
-  player: {
-    id: 1,
-    name: 'testPlayer'
-  },
-  team: {
-    id: 1,
-    name: 'testTeam'
-  }
-};
-
 const testCases: ReadonlyArray<TestCase> = [
   {
+    description: 'gets correct time after deciding goal',
     input: {
-      winningSideId: 123,
-      events: [
+      goalEvents: [
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 1
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 1,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 2
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 2,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 3
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 3,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 4
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 4,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 5
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 5,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 6
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 6,
+          team: 'winnerTeam'
         }
       ]
     },
     expected: 6
   },
   {
+    description: 'gets correct time when opponent scores in between',
     input: {
-      winningSideId: 123,
-      events: [
+      goalEvents: [
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 1
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 1,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 2
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 2,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 3
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 3,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 4
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 4,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 5
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 5,
+          team: 'winnerTeam'
         },
         {
-          ...baseGoalEvent,
-          time: {
-            elapsed: 6
-          },
-          team: {
-            id: 123,
-            name: 'winnerTeam'
-          }
+          timeElapsed: 6,
+          team: 'winnerTeam'
         },
         {
-            ...baseGoalEvent,
-            time: {
-              elapsed: 7
-            },
-            team: {
-              id: 456,
-              name: 'looserTeam'
-            }
-          },
-          {
-            ...baseGoalEvent,
-            time: {
-              elapsed: 8
-            },
-            team: {
-              id: 123,
-              name: 'winnerTeam'
-            }
-          }
+          timeElapsed: 7,
+          team: 'looserTeam'
+        },
+        {
+          timeElapsed: 8,
+          team: 'winnerTeam'
+        }
       ]
     },
     expected: 8
   }
 ];
+for (const { input, expected, description } of testCases) {
+  test(description, () => {
+    const winningSideId = 1;
+    const looserSideId = 2;
 
-test('tests wins from behind', () => {
-  for (const { input, expected } of testCases) {
-    const result = calculateMinuteOfDecidingGoal(input.winningSideId, input.events);
+    const goalEvents = transformToGoalEvent(input.goalEvents, {
+      winningSideId,
+      looserSideId
+    });
 
-    expect(result).toEqual(expected);
-  }
-});
+    const result = calculateMinuteOfDecidingGoal(winningSideId, goalEvents);
+
+    expect(result?.minuteOfDecidingGoal).toEqual(expected);
+  });
+}
+
+function transformToGoalEvent(
+  input: ReadonlyArray<TestGoalEvent>,
+  teamIds: { winningSideId: number; looserSideId: number }
+): ReadonlyArray<Pick<GoalEvent, 'time' | 'team'>> {
+  return input.map(({ timeElapsed, team }) => ({
+    time: {
+      elapsed: timeElapsed
+    },
+    team: {
+      id: team === 'winnerTeam' ? teamIds.winningSideId : teamIds.looserSideId,
+      name: team
+    }
+  }));
+}
