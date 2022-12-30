@@ -4,15 +4,15 @@ import { Statistic } from './types/types';
 import { calculateMinuteOfDecidingGoal } from './util/calculate-minute-of-deciding-goal';
 import { isGoalEvent } from './util/is-goal-event';
 
-export function createFastestDecidingGoal(): Statistic {
+export function createLatestMinuteOfFirstGoal(): Statistic {
   return {
     title: 'Community Questions',
-    description: 'Schnellste Zerfickung',
-    getGame: getFastestDecidingGoal
+    description: 'Späteste Zerfickung',
+    getGame: getLatestMinuteOfFirstGoal
   };
 }
 
-function getFastestDecidingGoal(
+function getLatestMinuteOfFirstGoal(
   _allTweets: ReadonlyArray<NormalisedTweetResult>,
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
@@ -32,7 +32,7 @@ function getFastestDecidingGoal(
       const minuteValues = calculateMinuteOfDecidingGoal(winningTeamId, goalEvents);
 
       const result = {
-        minuteOfDecidingGoal: minuteValues?.minuteOfDecidingGoal,
+        minuteOfFirstGoal: minuteValues?.minuteOfFirstGoal,
         fixture: `${fixture.fixture.id}: ${fixture.teams.home.name} ${fixture.score.fulltime.home} : ${fixture.score.fulltime.away} ${fixture.teams.away.name}`
       };
 
@@ -42,21 +42,21 @@ function getFastestDecidingGoal(
       (
         value
       ): value is {
-        minuteOfDecidingGoal: number;
+        minuteOfFirstGoal: number;
         fixture: string;
-      } => value.minuteOfDecidingGoal !== undefined
+      } => value.minuteOfFirstGoal !== undefined
     );
 
-  const fastestFiltered = result
-    .map(({ minuteOfDecidingGoal, fixture }) => ({
-      minute: minuteOfDecidingGoal,
+  const filtered = result
+    .map(({ minuteOfFirstGoal, fixture }) => ({
+      minuteOfFirstGoal,
       fixture
     }))
-    .filter(({ minute }) => minute < 23)
-    .sort((a, b) => a.minute - b.minute);
+    .filter(({ minuteOfFirstGoal }) => minuteOfFirstGoal > 55)
+    .sort((a, b) => b.minuteOfFirstGoal - a.minuteOfFirstGoal);
 
   return {
-    tweetText: `Schnellste Zerfickung: ${fastestFiltered[0].fixture} - Minute: ${fastestFiltered[0].minute}`,
-    additionalInformation: fastestFiltered
+    tweetText: `Späteste Zerfickung: ${filtered[0].fixture} - Minute : ${filtered[0].minuteOfFirstGoal}`,
+    additionalInformation: filtered
   };
 }

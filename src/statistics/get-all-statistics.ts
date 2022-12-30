@@ -2,7 +2,6 @@ import { createCompetitionClassification } from './competition-classification';
 import { createFastestDecidingGoal } from './fastest-minute-of-deciding-goal';
 import { createGetHighestAway } from './highest-away';
 import { createGetHighestGame } from './highest-game';
-import { createMinuteOfDecidingGoal } from './minute-of-deciding-goal';
 import { createGetMonthWithMostGames } from './month-with-most-games';
 import { createGetMostGamesLeague } from './most-games-league';
 import { createMostGamesLostByTeam } from './most-games-lost-by-team';
@@ -18,6 +17,9 @@ import { createGetPlayerWithMostGoalsInSingleGame } from './player-with-most-goa
 import { Statistic } from './types/types';
 import { createWinsFromBehind } from './wins-from-behind';
 import { createZeroGoalsAgainst } from './zero-goals-against-games';
+import { createLatestMinuteOfFirstGoal } from './latest-minute-of-first-goal';
+import { createLowestTimeDifferenceBetweenGoals } from './lowest-time-difference-between-goals';
+import { createMinuteOfDecidingGoal } from './minute-of-deciding-goal';
 
 export function getAllStatistics(): ReadonlyArray<Statistic> {
   return [
@@ -39,6 +41,8 @@ export function getAllStatistics(): ReadonlyArray<Statistic> {
     createZeroGoalsAgainst(),
     createWinsFromBehind(),
     createMinuteOfDecidingGoal(),
-    createFastestDecidingGoal()
+    createFastestDecidingGoal(),
+    createLatestMinuteOfFirstGoal(),
+    createLowestTimeDifferenceBetweenGoals()
   ];
 }
