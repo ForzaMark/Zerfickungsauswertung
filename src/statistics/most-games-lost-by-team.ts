@@ -11,7 +11,7 @@ export function createMostGamesLostByTeam(): Statistic {
 
 function getMostGamesLostByTeam(allTweets: ReadonlyArray<NormalisedTweetResult>): {
   tweetText: string;
-  addtionalInformation: unknown;
+  additionalInformation: unknown;
 } {
   const leaguesByOccurrence = allTweets.reduce((acc, { game }) => {
     const { homeScore, awayScore, homeTeam, awayTeam } = game
@@ -35,5 +35,5 @@ function getMostGamesLostByTeam(allTweets: ReadonlyArray<NormalisedTweetResult>)
     .filter(([_league, occurrence]) => occurrence > 4)
     .sort((a, b) => b[1] - a[1]);
 
-  return { tweetText: filtered[0][0], addtionalInformation: filtered };
+  return { tweetText: filtered[0][0], additionalInformation: filtered };
 }
