@@ -27,7 +27,11 @@ export interface FixturesResponseModel {
 
 export type FixtureEvent =
   | {
+      time: {
+        elapsed: number
+      }
       player: {
+        id: number
         name: string | null;
       };
       team: {

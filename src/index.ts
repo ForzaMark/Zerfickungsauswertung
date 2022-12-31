@@ -1,142 +1,82 @@
-import allTweets from './twitter/all-tweets.json';
 import { getAllStatistics } from './statistics/get-all-statistics';
-import { QueryTweetsHelper } from './twitter/query-tweets-helper';
-import { writeFileSync, readFileSync } from 'fs';
-import { join } from 'path';
-import {
-  FixtureAndEventsResponseModel,
-  getEventsOfAllFixturesOfDate
-} from './api-football/query-api-football';
-import { delayPromise } from './util/delay-promise';
+import { cloneApiFootballDataToFile } from './api-football/clone-api-football-data-to-file';
+import { getAllTweetDates } from './twitter/get-all-tweet-dates';
+import { cloneTwitterDataToFile } from './twitter/clone-twitter-data-to-file';
+import { readTwitterData } from './twitter/read-twitter-data';
+import { readApiFootballData } from './api-football/read-api-football-data';
+import chalk from 'chalk';
+import { getAllDatesOfYear } from './util/get-all-dates-of-year';
 
 const API_FOOTBALL_API_KEY = process.env.API_FOOTBALL_KEY;
 const TWITTER_API_KEY = process.env.TWITTER_API_KEY;
-
-async function writeAllTweetsToFile(apiToken: string) {
-  const queryHelper = new QueryTweetsHelper();
-  const allGames = await queryHelper.queryAllTweets(apiToken);
-
-  const path = join(__dirname, '../src/twitter/all-tweets.json');
-
-  writeFileSync(path, JSON.stringify(allGames), {
-    flag: 'w'
-  });
-}
+// TODO mheimer: use year constant for querying twitter results
+const CURRENT_YEAR = 2022;
 
 export async function main() {
-  const executionMode = process.argv[2];
+  if (API_FOOTBALL_API_KEY && TWITTER_API_KEY) {
+    await cloneDataToFile(TWITTER_API_KEY, API_FOOTBALL_API_KEY);
 
-  if (executionMode === 'fetchAll' || executionMode === 'fetchTwitter') {
-    console.log('FETCH TWITTER');
-    if (TWITTER_API_KEY) {
-      await writeAllTweetsToFile(TWITTER_API_KEY);
-    } else {
-      console.error('Unable to query twitter data. Twitter Api Token was not provided.')
+    const statistics = getAllStatistics();
+
+    const tweets = readTwitterData();
+    const apiFootballData = readApiFootballData();
+
+    for (const { title, description, getGame } of statistics) {
+      const { tweetText, additionalInformation } = getGame(tweets, apiFootballData);
+      printResult({ title, description, tweetText, additionalInformation });
     }
-  }
-
-  if (executionMode === 'fetchAll' || executionMode === 'fetchApiFootball') {
-    console.log('FETCH API-FOOTBALL');
-    if (API_FOOTBALL_API_KEY) {
-      await writeAllApiFootballDataToFile(API_FOOTBALL_API_KEY);
-    } else {
-      console.error('Unable to query api football data. ApiKey was not provided');
-    }
-  }
-
-  const statistics = getAllStatistics();
-  const allFixturesWithEvents = readFixturesWithEvents();
-
-  for (const { title, description, getGame } of statistics) {
-    const { tweetText, additionalInformation } = getGame(
-      allTweets,
-      allFixturesWithEvents
-    );
-    console.log(`
-    ---------------------------------
-    Title: ${title}
-    Description: ${description}
-    Game: ${JSON.stringify(tweetText)}
-    ${
-      additionalInformation
-        ? `Additional info: ${JSON.stringify(additionalInformation)}`
-        : ``
-    }
-    `);
-  }
-}
-
-async function writeAllApiFootballDataToFile(apiKey: string) {
-  const allDays = getAllDates();
-
-  const result: Array<FixtureAndEventsResponseModel> = [];
-
-  let requestRateLimit = 0;
-  let currentRequestNumber = 0;
-
-  for (const day of Array.from(allDays)) {
-    let withEvents: FixtureAndEventsResponseModel;
-
-    if (requestRateLimit > 250) {
-      writeToFile(result, { mode: 'backup', number: currentRequestNumber });
-      const delay = delayPromise(60000);
-      withEvents = await delay.then(() =>
-        getEventsOfAllFixturesOfDate(new Date(day), apiKey)
-      );
-      requestRateLimit = 0;
-    } else {
-      withEvents = await getEventsOfAllFixturesOfDate(
-        new Date(day),
-        apiKey
-      );
-    }
-
-    requestRateLimit = requestRateLimit + (withEvents.fixtures.length + 1);
-    currentRequestNumber = currentRequestNumber + (withEvents.fixtures.length + 1);
-
-    console.log('status: ', `${(currentRequestNumber / 3500) * 100} %`);
-
-    result.push(withEvents);
-  }
-
-  writeToFile(result, { mode: 'final' });
-}
-
-function getAllDates() {
-  const allDays = allTweets.map(({ tweet }) => tweet.created_at.split('T')[0]);
-  return new Set(allDays);
-}
-
-function writeToFile(
-  fixturesAndEventsByDays: Array<FixtureAndEventsResponseModel>,
-  options:
-    | {
-        mode: 'final';
-      }
-    | {
-        mode: 'backup';
-        number: number;
-      }
-) {
-  if (options.mode === 'final') {
-    const path = join(__dirname, '../src/api-football/all-fixtures-and-events.json');
-
-    writeFileSync(path, JSON.stringify(fixturesAndEventsByDays), {
-      flag: 'w'
-    });
   } else {
-    const path = join(__dirname, `../src/api-football/temp-data/${options.number}.json`);
-
-    writeFileSync(path, JSON.stringify(fixturesAndEventsByDays), {
-      flag: 'w'
-    });
+    console.error('Unable to start application because api keys are not provided');
   }
-}
-
-function readFixturesWithEvents() {
-  const path = join(__dirname, '../src/api-football/all-fixtures-and-events.json');
-
-  return JSON.parse(readFileSync(path, 'utf-8'));
 }
 
 main();
+
+async function cloneDataToFile(twitterApiKey: string, apiFootballApiKey: string) {
+
+  const executionMode = process.argv[2];
+
+  switch (executionMode) {
+    case 'fetchTwitter':
+      await cloneTwitterDataToFile(twitterApiKey);
+      break;
+
+    case 'fetchApiFootball':
+      await cloneApiFootballDataToFile(getAllDatesOfYear(CURRENT_YEAR), apiFootballApiKey);
+      break;
+
+    case 'fetchAll':
+      const allTweets = await cloneTwitterDataToFile(twitterApiKey);
+      await cloneApiFootballDataToFile(getAllTweetDates(allTweets), apiFootballApiKey);
+      break;
+
+    default:
+      break;
+  }
+}
+
+function printResult({
+  title,
+  description,
+  tweetText,
+  additionalInformation
+}: {
+  title: string;
+  description: string;
+  tweetText: string;
+  additionalInformation: unknown;
+}) {
+  console.log('-'.repeat(process.stdout.columns));
+  console.log(chalk.yellowBright(`Title: ${title}`));
+  console.log(
+    `
+      Description: ${description}
+      Text: ${tweetText}
+      ${
+        additionalInformation
+          ? `Additional info: ${JSON.stringify(additionalInformation, null, 4)}`
+          : ``
+      }
+  `
+  );
+}

@@ -1,5 +1,5 @@
-import { extractGameInformationFromTweet } from '../support/extract-game-information-from-tweet';
-import { NormalisedTweetResult, Statistic } from './types';
+import { NormalisedTweetResult } from '../twitter/types';
+import { Statistic } from './types/types';
 
 export function createMostGamesLostByTeam(): Statistic {
   return {
@@ -11,12 +11,10 @@ export function createMostGamesLostByTeam(): Statistic {
 
 function getMostGamesLostByTeam(allTweets: ReadonlyArray<NormalisedTweetResult>): {
   tweetText: string;
-  addtionalInformation: unknown;
+  additionalInformation: unknown;
 } {
-  const leaguesByOccurrence = allTweets.reduce((acc, { tweet }) => {
-    const { homeScore, awayScore, homeTeam, awayTeam } = extractGameInformationFromTweet(
-      tweet.text
-    );
+  const leaguesByOccurrence = allTweets.reduce((acc, { game }) => {
+    const { homeScore, awayScore, homeTeam, awayTeam } = game
     const looser = homeScore < awayScore ? homeTeam : awayTeam;
     const isLoserAlredyDefined = typeof acc[looser] === 'number';
 
@@ -37,5 +35,5 @@ function getMostGamesLostByTeam(allTweets: ReadonlyArray<NormalisedTweetResult>)
     .filter(([_league, occurrence]) => occurrence > 4)
     .sort((a, b) => b[1] - a[1]);
 
-  return { tweetText: filtered[0][0], addtionalInformation: filtered };
+  return { tweetText: filtered[0][0], additionalInformation: filtered };
 }

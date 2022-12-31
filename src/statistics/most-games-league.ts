@@ -1,4 +1,6 @@
-import { NormalisedTweetResult, Statistic } from './types';
+import { NormalisedTweetResult } from '../twitter/types';
+import { Statistic } from './types/types';
+import { getLeagueFromText } from './util/get-league-from-text';
 
 export function createGetMostGamesLeague(): Statistic {
   return {
@@ -10,7 +12,7 @@ export function createGetMostGamesLeague(): Statistic {
 
 function getMostGamesLeague(allTweets: ReadonlyArray<NormalisedTweetResult>): {
   tweetText: string;
-  additionalInformation: unknown
+  additionalInformation: unknown;
 } {
   const leaguesByOccurrence = allTweets.reduce((acc, { tweet }) => {
     const currentLeague = getLeagueFromText(tweet.text);
@@ -34,15 +36,4 @@ function getMostGamesLeague(allTweets: ReadonlyArray<NormalisedTweetResult>): {
     .sort((a, b) => b[1] - a[1]);
 
   return { tweetText: filtered[0][0], additionalInformation: filtered };
-}
-
-export function getLeagueFromText(tweetText: string): string {
-  const splitOnLineBreak = tweetText.split('\n');
-  const result = splitOnLineBreak[2];
-
-  if (result) {
-    return result.toString();
-  }
-
-  throw new Error(`Unable to extract Regex from tweet ${tweetText}`);
 }

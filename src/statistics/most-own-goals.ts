@@ -1,19 +1,7 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
 import { FixtureEvent } from '../api-football/types';
-import { NormalisedTweetResult, Statistic } from './types';
-
-interface GoalEvent {
-  player: {
-    id: number;
-    name: string;
-  };
-  team: {
-    id: number;
-    name: string;
-  };
-  type: 'Goal';
-  detail: 'Normal Goal' | 'Own Goal';
-}
+import { NormalisedTweetResult } from '../twitter/types';
+import { GoalEvent, Statistic } from './types/types';
 
 export function createGetMostOwnGoals(): Statistic {
   return {

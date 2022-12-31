@@ -1,4 +1,5 @@
-import { NormalisedTweetResult, Statistic } from './types';
+import { NormalisedTweetResult } from '../twitter/types';
+import { Statistic } from './types/types';
 
 export function createGetMonthWithMostGames(): Statistic {
   return {
@@ -34,7 +35,9 @@ function getNumberOfGames(allTweets: ReadonlyArray<NormalisedTweetResult>): {
     {} as { [month: number]: number }
   );
 
-  const filtered = Object.entries(numberOfDates).filter(([_key, value]) => value > 200).sort((a, b) => b[1] - a[1]);
+  const filtered = Object.entries(numberOfDates)
+    .filter(([_key, value]) => value > 200)
+    .sort((a, b) => b[1] - a[1]);
 
   return {
     tweetText: `Months are zero based, month with most: ${filtered[0][0]}`,

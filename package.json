@@ -7,8 +7,8 @@
     "start:online:all": "npm run build && node -r dotenv/config dist/index.js fetchAll",
     "start:online:twitter": "npm run build && node -r dotenv/config dist/index.js fetchTwitter",
     "start:online:api-football": "npm run build && node -r dotenv/config dist/index.js fetchApiFootball",
-    "start:offline": "npm run build && node dist/index.js offline",
-    "test": "npm run build && jest extract-game-information-from-tweet.spec.js && jest get-league-from-text.spec.js && jest wins-from-behind.spec.js && jest minute-of-deciding-goal.spec.js",
+    "start:offline": "npm run build && node -r dotenv/config dist/index.js offline",
+    "test": "npm run build && jest",
     "build": "tsc --resolveJsonModule --esModuleInterop --project ./tsconfig.json",
     "prettify": "prettier --write index.ts"
   },
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
+    "chalk": "^4.1.2",
     "dotenv": "^16.0.3",
     "jest": "^29.3.1",
     "prettier": "^2.5.1",
@@ -25,5 +26,10 @@
   "devDependencies": {
     "@types/jest": "^29.2.3",
     "@types/node": "^17.0.6"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "src"
+    ]
   }
 }

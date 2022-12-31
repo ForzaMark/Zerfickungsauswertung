@@ -4,15 +4,15 @@ import { Statistic } from './types/types';
 import { calculateMinuteOfDecidingGoal } from './util/calculate-minute-of-deciding-goal';
 import { isGoalEvent } from './util/is-goal-event';
 
-export function createFastestDecidingGoal(): Statistic {
+export function createLowestTimeDifferenceBetweenGoals(): Statistic {
   return {
     title: 'Community Questions',
-    description: 'Schnellste Zerfickung',
-    getGame: getFastestDecidingGoal
+    description: 'Kleinste Zeitdifferenz zwischen erstem und entscheidendem Tor',
+    getGame: getLowestTimeDifferenceBetweenGoals
   };
 }
 
-function getFastestDecidingGoal(
+function getLowestTimeDifferenceBetweenGoals(
   _allTweets: ReadonlyArray<NormalisedTweetResult>,
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
@@ -32,7 +32,9 @@ function getFastestDecidingGoal(
       const minuteValues = calculateMinuteOfDecidingGoal(winningTeamId, goalEvents);
 
       const result = {
-        minuteOfDecidingGoal: minuteValues?.minuteOfDecidingGoal,
+        differenceGoalMinutes:
+          (minuteValues?.minuteOfDecidingGoal || 0) -
+          (minuteValues?.minuteOfFirstGoal || 0),
         fixture: `${fixture.fixture.id}: ${fixture.teams.home.name} ${fixture.score.fulltime.home} : ${fixture.score.fulltime.away} ${fixture.teams.away.name}`
       };
 
@@ -42,21 +44,17 @@ function getFastestDecidingGoal(
       (
         value
       ): value is {
-        minuteOfDecidingGoal: number;
+        differenceGoalMinutes: number;
         fixture: string;
-      } => value.minuteOfDecidingGoal !== undefined
+      } => value.differenceGoalMinutes !== undefined && value.differenceGoalMinutes !== 0
     );
 
-  const fastestFiltered = result
-    .map(({ minuteOfDecidingGoal, fixture }) => ({
-      minute: minuteOfDecidingGoal,
-      fixture
-    }))
-    .filter(({ minute }) => minute < 23)
-    .sort((a, b) => a.minute - b.minute);
+  const filtered = result
+    .filter(({ differenceGoalMinutes }) => differenceGoalMinutes < 13)
+    .sort((a, b) => a.differenceGoalMinutes - b.differenceGoalMinutes);
 
   return {
-    tweetText: `Schnellste Zerfickung: ${fastestFiltered[0].fixture} - Minute: ${fastestFiltered[0].minute}`,
-    additionalInformation: fastestFiltered
+    tweetText: `${filtered[0].fixture} - Minute : ${filtered[0].differenceGoalMinutes}`,
+    additionalInformation: filtered
   };
 }
