@@ -40,7 +40,7 @@ function getMostGamesCountry(_allTweets, allFixturesWithEvents) {
     var filtered = Object.entries(countriesByOccurrence)
         .filter(function (_a) {
         var _league = _a[0], occurrence = _a[1];
-        return occurrence >= 20;
+        return occurrence > 100;
     })
         .sort(function (a, b) { return b[1] - a[1]; });
     return { tweetText: filtered[0][0], additionalInformation: filtered };
