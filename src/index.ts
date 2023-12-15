@@ -9,8 +9,7 @@ import { getAllDatesOfYear } from './util/get-all-dates-of-year';
 
 const API_FOOTBALL_API_KEY = process.env.API_FOOTBALL_KEY;
 const TWITTER_API_KEY = process.env.TWITTER_API_KEY;
-// TODO mheimer: use year constant for querying twitter results
-const CURRENT_YEAR = 2022;
+const CURRENT_YEAR = Number(process.env.YEAR);
 
 export async function main() {
   if (API_FOOTBALL_API_KEY && TWITTER_API_KEY) {
@@ -38,7 +37,7 @@ async function cloneDataToFile(twitterApiKey: string, apiFootballApiKey: string)
 
   switch (executionMode) {
     case 'fetchTwitter':
-      await cloneTwitterDataToFile(twitterApiKey);
+      await cloneTwitterDataToFile(twitterApiKey, CURRENT_YEAR);
       break;
 
     case 'fetchApiFootball':
@@ -46,7 +45,7 @@ async function cloneDataToFile(twitterApiKey: string, apiFootballApiKey: string)
       break;
 
     case 'fetchAll':
-      const allTweets = await cloneTwitterDataToFile(twitterApiKey);
+      const allTweets = await cloneTwitterDataToFile(twitterApiKey, CURRENT_YEAR);
       await cloneApiFootballDataToFile(getAllTweetDates(allTweets), apiFootballApiKey);
       break;
 

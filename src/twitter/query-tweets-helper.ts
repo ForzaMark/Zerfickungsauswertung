@@ -23,13 +23,13 @@ export class QueryTweetsHelper {
     isLastPage: false
   };
 
-  async queryAllTweets(apiToken: string): Promise<ReadonlyArray<NormalisedTweetResult>> {
+  async queryAllTweets(apiToken: string, year: number): Promise<ReadonlyArray<NormalisedTweetResult>> {
     let allTweets: Array<Tweet> = [];
 
     while (!this.pagination.isLastPage) {
       const requestUrl = !this.pagination.isInitial
-        ? createQueryUrl(this.pagination.next_token)
-        : createQueryUrl(undefined);
+        ? createQueryUrl(this.pagination.next_token, year)
+        : createQueryUrl(undefined, year);
 
       const config = {
         headers: { Authorization: `Bearer ${apiToken}` }
