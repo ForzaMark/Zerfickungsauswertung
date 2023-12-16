@@ -1,11 +1,13 @@
 export function getAllDatesOfYear(year: number): ReadonlySet<string> {
-  const dates: Date[] = [];
+  const startDate = new Date(year, 0, 1);
+  const endDate = new Date(year, 11, 31);
 
-  for (let month = 0; month < 12; month++) {
-    for (let day = 1; day <= new Date(year, month + 1, 0).getDate(); day++) {
-      dates.push(new Date(year, month, day));
-    }
+  const allDates = new Array<string>();
+
+  for (let currentDate = startDate; currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
+    const currentDateClone = new Date(currentDate);
+    allDates.push(currentDateClone.toISOString().split('T')[0]);
   }
 
-  return new Set(dates.map((date) => date.toString().split('T')[0]));
+  return new Set(allDates);
 }
