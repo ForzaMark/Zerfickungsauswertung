@@ -41,8 +41,9 @@ function getMostGamesLeague(
   }, {} as { [league: string]: number });
 
   const filtered = Object.entries(leaguesByOccurrence)
-    .filter(([_league, occurrence]) => occurrence >= 20)
+    .filter(([_league, occurrence]) => occurrence >= 100)
     .sort((a, b) => b[1] - a[1]);
 
+  console.log('118 is second tier belarus' )
   return { tweetText: filtered[0][0], additionalInformation: filtered };
 }

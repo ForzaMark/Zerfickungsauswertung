@@ -23,7 +23,7 @@ function getMostGamesPerDay(
   }));
 
   const filtered = results
-    .filter(({fixtures}) => fixtures > 20)
+    .filter(({fixtures}) => fixtures > 40)
     .sort((a, b) => b.fixtures - a.fixtures);
 
   return {

@@ -17,8 +17,8 @@ function getNumberOfGames(
   tweetText: string;
   additionalInformation: unknown;
 } {
-  const months = allFixturesWithEvents.map(({ date }) =>
-    new Date(date).getMonth()
+  const months = allFixturesWithEvents.flatMap(value => value.fixtures).map(({ fixture }) =>
+    new Date(fixture.fixture.date).getMonth()
   );
 
   const numberOfDates = months.reduce(
@@ -41,8 +41,10 @@ function getNumberOfGames(
     {} as { [month: number]: number }
   );
 
+  console.log(numberOfDates)
+
   const filtered = Object.entries(numberOfDates)
-    .filter(([_key, value]) => value > 200)
+    .filter(([_key, value]) => value > 300)
     .sort((a, b) => b[1] - a[1]);
 
   return {

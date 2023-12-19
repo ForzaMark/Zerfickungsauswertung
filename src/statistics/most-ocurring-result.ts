@@ -1,37 +1,41 @@
-import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types/types';
+import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
+import { NormalisedTweetResult } from "../twitter/types";
+import { Statistic } from "./types/types";
 
 export function createGetMostOccurringResults(): Statistic {
   return {
-    title: 'Allgemein',
-    description: 'Häufigstes Ergebniss',
-    getGame: getMostOccurringResult
+    title: "Allgemein",
+    description: "Häufigstes Ergebniss",
+    getGame: getMostOccurringResult,
   };
 }
 
-function getMostOccurringResult(allTweets: ReadonlyArray<NormalisedTweetResult>): {
+function getMostOccurringResult(
+  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+  allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
+): {
   tweetText: string;
   additionalInformation: unknown;
 } {
-  const results = allTweets.map(({ game }) =>
-    game.homeScore > game.awayScore
-      ? `${game.homeScore}:${game.awayScore}`
-      : `${game.awayScore}:${game.homeScore}`
+  const results = allFixturesWithEvents.flatMap(value => value.fixtures).map(({ fixture }) =>
+    fixture.score.fulltime.home > fixture.score.fulltime.away
+      ? `${fixture.score.fulltime.home}:${fixture.score.fulltime.away}`
+      : `${fixture.score.fulltime.away}:${fixture.score.fulltime.home}`
   );
 
   const numberOfDates = results.reduce(
     (acc, curr) => {
-      const isResultAlreadyDefined = typeof acc[curr] === 'number';
+      const isResultAlreadyDefined = typeof acc[curr] === "number";
 
       if (isResultAlreadyDefined) {
         return {
           ...acc,
-          [curr]: acc[curr] + 1
+          [curr]: acc[curr] + 1,
         };
       } else {
         return {
           ...acc,
-          [curr]: 1
+          [curr]: 1,
         };
       }
     },
@@ -45,6 +49,6 @@ function getMostOccurringResult(allTweets: ReadonlyArray<NormalisedTweetResult>)
 
   return {
     tweetText: `Most occurring result: ${filtered[0][0]}`,
-    additionalInformation: filtered
+    additionalInformation: filtered,
   };
 }

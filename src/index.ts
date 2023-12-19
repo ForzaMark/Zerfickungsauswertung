@@ -19,6 +19,11 @@ const CURRENT_YEAR = Number(process.env.CURRENT_YEAR);
 // https://tweetdelete.net/resources/how-to-see-your-most-liked-tweet/
 
 // !!! run all queries for errors again
+// !!! fix all statistics
+// !!! there are no events 
+  // - fix player with most goals
+  // - fix player with most goals in one game
+  // - most own goals
 export async function main() {
   if (API_FOOTBALL_API_KEY && TWITTER_API_KEY && CURRENT_YEAR) {
     await cloneDataToFile(TWITTER_API_KEY, API_FOOTBALL_API_KEY);

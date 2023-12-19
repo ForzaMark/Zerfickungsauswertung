@@ -1,24 +1,38 @@
-import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types/types';
+import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
+import { NormalisedTweetResult } from "../twitter/types";
+import { Statistic } from "./types/types";
 
 export function createGetMostLoserGoals(): Statistic {
   return {
-    title: 'Woran hats gelegen',
-    description: 'Zerfickung mit den meisten Toren des unterlegenen Teams',
-    getGame: getMostLoserGoals
+    title: "Woran hats gelegen",
+    description: "Zerfickung mit den meisten Toren des unterlegenen Teams",
+    getGame: getMostLoserGoals,
   };
 }
 
-function getMostLoserGoals(allTweets: ReadonlyArray<NormalisedTweetResult>): {
+function getMostLoserGoals(
+  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+  allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
+): {
   tweetText: string;
 } {
-  return allTweets.reduce(
-    (acc, { tweet, game }) => {
-      const loserGoals =
-        game.homeScore > game.awayScore ? game.awayScore : game.homeScore;
+  return allFixturesWithEvents
+    .flatMap((value) => value.fixtures)
+    .reduce(
+      (acc, { fixture }) => {
+        const { score, teams } = fixture;
+        const loserGoals =
+          score.fulltime.home > score.fulltime.away
+            ? score.fulltime.away
+            : score.fulltime.home;
 
-      return acc.loserGoals < loserGoals ? { loserGoals, tweetText: tweet.text } : acc;
-    },
-    { loserGoals: 0, tweetText: 'initial' }
-  );
+        return acc.loserGoals < loserGoals
+          ? {
+              loserGoals,
+              tweetText: `${teams.home.name} ${score.fulltime.home} : ${score.fulltime.away} ${teams.away.name}`,
+            }
+          : acc;
+      },
+      { loserGoals: 0, tweetText: "initial" }
+    );
 }

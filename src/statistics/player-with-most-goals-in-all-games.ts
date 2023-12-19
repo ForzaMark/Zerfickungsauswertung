@@ -21,6 +21,7 @@ function getPlayerWithMostGoals(
   const allGoalScorer = allFixturesWithEvents.flatMap((fixturesAndEvents) =>
     fixturesAndEvents.fixtures.flatMap(({ fixture, events }) => {
       if (fixture.score.fulltime.home > fixture.score.fulltime.away) {
+        console.log(events)
         return events
           .filter(isGoalEvent)
           .filter((event) => isTeamEvent(event, fixture.teams.home.id))
@@ -47,11 +48,12 @@ function getPlayerWithMostGoals(
   }, {} as { [key: string]: number });
 
   const filtered = Object.entries(goalScorersByCount)
-    .filter(([_key, value]) => value > 15)
+    //.filter(([_key, value]) => value > 10)
     .sort((a, b) => b[1] - a[1]);
 
   return {
-    tweetText: `Der Zerficker: ${filtered[0][0]}`,
+    //tweetText: `Der Zerficker: ${filtered[0][0]}`,
+    tweetText: `Der Zerficker: tbd`,
     additionalInformation: filtered
   };
 }

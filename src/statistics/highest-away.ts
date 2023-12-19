@@ -1,29 +1,38 @@
-import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types/types';
+import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
+import { NormalisedTweetResult } from "../twitter/types";
+import { Statistic } from "./types/types";
 
 export function createGetHighestAway(): Statistic {
   return {
-    title: 'Füße geblutet',
-    description: 'höchste Auswärtszerfickung',
-    getGame: getHighestAway
+    title: "Füße geblutet",
+    description: "höchste Auswärtszerfickung",
+    getGame: getHighestAway,
   };
 }
 
-function getHighestAway(allTweets: ReadonlyArray<NormalisedTweetResult>): {
+function getHighestAway(
+  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+  allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
+): {
   tweetText: string;
 } {
-  return allTweets.reduce(
-    (acc, { tweet, game }) => {
-      if (game.homeScore > game.awayScore) {
-        return acc;
-      } else {
-        const currentDifference = game.awayScore - game.homeScore;
+  return allFixturesWithEvents
+    .flatMap(({ fixtures }) => fixtures)
+    .reduce(
+      (acc, { fixture: { score, teams } }) => {
+        if (score.fulltime.home > score.fulltime.away) {
+          return acc;
+        } else {
+          const currentDifference = score.fulltime.away - score.fulltime.home;
 
-        return currentDifference > acc.difference
-          ? { difference: currentDifference, tweetText: tweet.text }
-          : acc;
-      }
-    },
-    { difference: 0, tweetText: 'initial' }
-  );
+          return currentDifference > acc.difference
+            ? {
+                difference: currentDifference,
+                tweetText: `${teams.home.name} ${score.fulltime.home} : ${score.fulltime.away} ${teams.away.name}`,
+              }
+            : acc;
+        }
+      },
+      { difference: 0, tweetText: "initial" }
+    );
 }

@@ -2,6 +2,7 @@ export interface FixturesResponseModel {
   response: ReadonlyArray<{
     fixture: {
       id: number;
+      date: string;
     };
     league: {
       id: number;

@@ -59,7 +59,8 @@ function getPlayerWithMostGoalsInSingleGame(
     .sort((a, b) => b[1] - a[1]);
 
   return {
-    tweetText: `Der single Zerficker: ${filtered[0][0]} + Fenna Kalma bei den Frauen mit 6 Toren`,
+    //tweetText: `Der single Zerficker: ${filtered[0][0]} + Fenna Kalma bei den Frauen mit 6 Toren`,
+    tweetText: `Der single Zerficker: tbd`,
     additionalInformation: filtered
   };
 }
