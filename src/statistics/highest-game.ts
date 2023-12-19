@@ -13,14 +13,14 @@ function getHighestGame(allTweets: ReadonlyArray<NormalisedTweetResult>): {
   tweetText: string;
 } {
   return allTweets.reduce(
-    (acc, { game, tweet }) => {
+    (acc, { game }) => {
       const currentDifference =
         game.homeScore > game.awayScore
           ? game.homeScore - game.awayScore
           : game.awayScore - game.homeScore;
 
       return currentDifference > acc.difference
-        ? { difference: currentDifference, tweetText: tweet.text }
+        ? { difference: currentDifference, tweetText: `${game.homeTeam} ${game.homeScore} : ${game.awayScore} ${game.awayTeam}` }
         : acc;
     },
     { difference: 0, tweetText: 'initial' }

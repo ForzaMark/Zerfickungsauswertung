@@ -1,5 +1,5 @@
-export function getAllDatesOfYear(year: number): ReadonlySet<string> {
-  const startDate = new Date(year, 0, 1);
+export function getAllDatesOfYear(year: number, modifiedStartDate?: Date): ReadonlySet<string> {
+  const startDate = new Date(year, 0, 1) || modifiedStartDate;
   const endDate = new Date(year, 11, 31);
 
   const allDates = new Array<string>();

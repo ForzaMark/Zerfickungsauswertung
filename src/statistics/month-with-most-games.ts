@@ -1,33 +1,39 @@
-import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types/types';
+import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
+import { NormalisedTweetResult } from "../twitter/types";
+import { Statistic } from "./types/types";
 
 export function createGetMonthWithMostGames(): Statistic {
   return {
-    title: 'Allgemein',
-    description: 'Monat mit meisten',
-    getGame: getNumberOfGames
+    title: "Allgemein",
+    description: "Monat mit meisten",
+    getGame: getNumberOfGames,
   };
 }
 
-function getNumberOfGames(allTweets: ReadonlyArray<NormalisedTweetResult>): {
+function getNumberOfGames(
+  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+  allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
+): {
   tweetText: string;
   additionalInformation: unknown;
 } {
-  const months = allTweets.map(({ tweet }) => new Date(tweet.created_at).getMonth());
+  const months = allFixturesWithEvents.map(({ date }) =>
+    new Date(date).getMonth()
+  );
 
   const numberOfDates = months.reduce(
     (acc, curr) => {
-      const isMonthAlreadyDefined = typeof acc[curr] === 'number';
+      const isMonthAlreadyDefined = typeof acc[curr] === "number";
 
       if (isMonthAlreadyDefined) {
         return {
           ...acc,
-          [curr]: acc[curr] + 1
+          [curr]: acc[curr] + 1,
         };
       } else {
         return {
           ...acc,
-          [curr]: 1
+          [curr]: 1,
         };
       }
     },
@@ -41,6 +47,6 @@ function getNumberOfGames(allTweets: ReadonlyArray<NormalisedTweetResult>): {
 
   return {
     tweetText: `Months are zero based, month with most: ${filtered[0][0]}`,
-    additionalInformation: filtered
+    additionalInformation: filtered,
   };
 }
