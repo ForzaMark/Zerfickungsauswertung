@@ -9,10 +9,10 @@ import { getAllDatesOfYear } from './util/get-all-dates-of-year';
 
 const API_FOOTBALL_API_KEY = process.env.API_FOOTBALL_KEY;
 const TWITTER_API_KEY = process.env.TWITTER_API_KEY;
-const CURRENT_YEAR = Number(process.env.YEAR);
+const CURRENT_YEAR = Number(process.env.CURRENT_YEAR);
 
 export async function main() {
-  if (API_FOOTBALL_API_KEY && TWITTER_API_KEY) {
+  if (API_FOOTBALL_API_KEY && TWITTER_API_KEY && CURRENT_YEAR) {
     await cloneDataToFile(TWITTER_API_KEY, API_FOOTBALL_API_KEY);
 
     const statistics = getAllStatistics();
@@ -25,7 +25,7 @@ export async function main() {
       printResult({ title, description, tweetText, additionalInformation });
     }
   } else {
-    console.error('Unable to start application because api keys are not provided');
+    console.error('Unable to start application because api keys or year were not provided');
   }
 }
 
