@@ -15,10 +15,6 @@ export async function getEventsOfAllFixturesOfDate(
 ): Promise<FixtureAndEventsResponseModel> {
   const requestDate = date.toISOString().split("T")[0];
 
-
-  // perhabs use agent for timeout problem: https://stackoverflow.com/questions/62500011/reuse-tcp-connection-with-node-fetch-in-node-js
-  // or timeout property, whatever it means
-
   const fixtures: FixturesResponseModel = await (await queryFixturesByDate(requestDate, apiKey)).json();
   const filterIsZerfickung = fixtures.response.filter(
     ({ score }) =>
@@ -58,10 +54,8 @@ function queryFixturesByDate(date: string, apiKey: string) {
 } 
 
 function queryEventsOfFixture(fixtureId: number, apiKey: string) {
-
-
   const response = fetch(
-    `https://api-football-v1.p.rapidapi.com/v3/fixtures/events??fixture=${fixtureId}`,
+    `https://api-football-v1.p.rapidapi.com/v3/fixtures/events?fixture=${fixtureId}`,
     {
       method: "get",
       headers: {
