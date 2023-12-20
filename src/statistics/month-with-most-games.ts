@@ -41,8 +41,6 @@ function getNumberOfGames(
     {} as { [month: number]: number }
   );
 
-  console.log(numberOfDates)
-
   const filtered = Object.entries(numberOfDates)
     .filter(([_key, value]) => value > 300)
     .sort((a, b) => b[1] - a[1]);

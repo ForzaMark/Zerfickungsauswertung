@@ -50,7 +50,7 @@ function getLowestTimeDifferenceBetweenGoals(
     );
 
   const filtered = result
-    .filter(({ differenceGoalMinutes }) => differenceGoalMinutes < 13)
+    .filter(({ differenceGoalMinutes }) => differenceGoalMinutes < 17)
     .sort((a, b) => a.differenceGoalMinutes - b.differenceGoalMinutes);
 
   return {
