@@ -1,5 +1,4 @@
 import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
-import { NormalisedTweetResult } from "../twitter/types";
 import { Statistic } from "./types/types";
 
 export function createZeroGoalsAgainst(): Statistic {
@@ -11,7 +10,6 @@ export function createZeroGoalsAgainst(): Statistic {
 }
 
 function getZeroGoalsAgainst(
-  _allTweets: ReadonlyArray<NormalisedTweetResult>,
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
   tweetText: string;

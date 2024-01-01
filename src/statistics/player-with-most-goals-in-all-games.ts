@@ -1,5 +1,5 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { NormalisedTweetResult } from '../twitter/types';
+ 
 import { GoalEvent, Statistic } from './types/types';
 import { isGoalEvent } from './util/is-goal-event';
 
@@ -12,7 +12,7 @@ export function createGetPlayerWithMostGoalsInAllGames(): Statistic {
 }
 
 function getPlayerWithMostGoals(
-  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+   
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
   tweetText: string;

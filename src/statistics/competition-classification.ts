@@ -1,7 +1,6 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
 import { Statistic } from './types/types';
 import leagueLookup from '../api-football/api-football-league.lookup.json';
-import { NormalisedTweetResult } from '../twitter/types';
 
 export function createCompetitionClassification(): Statistic {
   return {
@@ -12,7 +11,6 @@ export function createCompetitionClassification(): Statistic {
 }
 
 function getCompetitionClassification(
-  _allTweets: ReadonlyArray<NormalisedTweetResult>,
   fixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
   tweetText: string;

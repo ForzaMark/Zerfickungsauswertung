@@ -1,5 +1,5 @@
 import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
-import { NormalisedTweetResult } from "../twitter/types";
+ 
 import { Statistic } from "./types/types";
 
 export function createMostGamesPerDay(): Statistic {
@@ -11,7 +11,7 @@ export function createMostGamesPerDay(): Statistic {
 }
 
 function getMostGamesPerDay(
-  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+   
   fixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
   tweetText: string;

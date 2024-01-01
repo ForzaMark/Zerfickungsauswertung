@@ -1,6 +1,6 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
 import { FixtureEvent } from '../api-football/types';
-import { NormalisedTweetResult } from '../twitter/types';
+ 
 import { GoalEvent, Statistic } from './types/types';
 
 export function createGetMostOwnGoals(): Statistic {
@@ -12,7 +12,7 @@ export function createGetMostOwnGoals(): Statistic {
 }
 
 function getGameWithMostOwnGoals(
-  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+   
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
   tweetText: string;

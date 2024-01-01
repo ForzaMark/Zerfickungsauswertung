@@ -1,5 +1,5 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { NormalisedTweetResult } from '../twitter/types';
+ 
 import { Statistic } from './types/types';
 import { isGoalEvent } from './util/is-goal-event';
 import { isWinFromBehind } from './util/is-win-from-behind';
@@ -13,7 +13,7 @@ export function createWinsFromBehind(): Statistic {
 }
 
 function getGameWithWinFromBehind(
-  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+   
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
   tweetText: string;

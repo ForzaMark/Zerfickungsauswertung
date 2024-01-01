@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:online:all": "npm run build && node -r dotenv/config dist/index.js fetchAll",
-    "start:online:twitter": "npm run build && node -r dotenv/config dist/index.js fetchTwitter",
-    "start:online:api-football": "npm run build && node -r dotenv/config dist/index.js fetchApiFootball",
-    "start:offline": "npm run build && node -r dotenv/config dist/index.js offline",
+    "start:online": "npm run build && node -r dotenv/config dist/index.js fetch",
+    "start:offline": "npm run build && node -r dotenv/config dist/index.js",
     "test": "npm run build && jest",
     "build": "tsc --resolveJsonModule --esModuleInterop --project ./tsconfig.json",
     "prettify": "prettier --write index.ts"

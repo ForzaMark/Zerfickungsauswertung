@@ -1,5 +1,5 @@
 import { FixtureAndEventsResponseModel } from '../api-football/query-api-football';
-import { NormalisedTweetResult } from '../twitter/types';
+ 
 import { Statistic } from './types/types';
 
 export function createGetMostGamesCountry(): Statistic {
@@ -11,7 +11,7 @@ export function createGetMostGamesCountry(): Statistic {
 }
 
 function getMostGamesCountry(
-  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+   
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
   tweetText: string;
