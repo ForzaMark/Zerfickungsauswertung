@@ -49,7 +49,7 @@ function getPlayerWithMostGoals(
   }, {} as { [key: string]: number });
 
   const filtered = Object.entries(goalScorersByCount)
-    .filter(([_key, value]) => value > 17)
+    .filter(([_key, value]) => value > 11)
     .sort((a, b) => b[1] - a[1]);
 
   return {

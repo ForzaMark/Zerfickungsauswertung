@@ -1,22 +1,31 @@
-import { NormalisedTweetResult } from '../twitter/types';
-import { Statistic } from './types/types';
+import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
+import { NormalisedTweetResult } from "../twitter/types";
+import { Statistic } from "./types/types";
 
 export function createZeroGoalsAgainst(): Statistic {
   return {
-    title: 'Allgemein',
-    description: 'Anzahl Zerfickungen',
-    getGame: getZeroGoalsAgainst
+    title: "Allgemein",
+    description: "Anzahl Zerfickungen",
+    getGame: getZeroGoalsAgainst,
   };
 }
 
-function getZeroGoalsAgainst(allTweets: ReadonlyArray<NormalisedTweetResult>): {
+function getZeroGoalsAgainst(
+  _allTweets: ReadonlyArray<NormalisedTweetResult>,
+  allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
+): {
   tweetText: string;
 } {
-  const allZeroGoalAgainstGames = allTweets
-    .map(({ game }) =>
-      game.homeScore > game.awayScore ? game.awayScore : game.homeScore
+  const allFixtures = allFixturesWithEvents.flatMap(({fixtures}) => fixtures)
+  const allZeroGoalAgainstGames = allFixtures
+    .map(({ fixture: {score} }) =>
+      score.fulltime.home > score.fulltime.away ? score.fulltime.away : score.fulltime.home
     )
     .filter((value) => value === 0).length;
 
-  return {tweetText: `Anteil zu Null Zerfickungen: ${allZeroGoalAgainstGames / allTweets.length * 100} %`}
+  return {
+    tweetText: `Anteil zu Null Zerfickungen: ${
+      (allZeroGoalAgainstGames / allFixtures.length) * 100
+    } %`,
+  };
 }

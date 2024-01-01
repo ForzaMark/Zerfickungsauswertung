@@ -55,7 +55,7 @@ function getPlayerWithMostGoalsInSingleGame(
   }, {} as { [key: string]: number });
 
   const filtered = Object.entries(goalScorersByCount)
-    .filter(([_key, value]) => value >= 8)
+    .filter(([_key, value]) => value >= 6)
     .sort((a, b) => b[1] - a[1]);
 
   return {
