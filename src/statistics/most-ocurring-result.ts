@@ -14,8 +14,8 @@ function getMostOccurringResult(
    
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
-  tweetText: string;
-  additionalInformation: unknown;
+  result: string,
+  numberOfGames: number
 } {
   const results = allFixturesWithEvents.flatMap(value => value.fixtures).map(({ fixture }) =>
     fixture.score.fulltime.home > fixture.score.fulltime.away
@@ -44,11 +44,10 @@ function getMostOccurringResult(
   );
 
   const filtered = Object.entries(numberOfDates)
-    .filter(([_key, value]) => value > 100)
     .sort((a, b) => b[1] - a[1]);
 
   return {
-    tweetText: `Most occurring result: ${filtered[0][0]}`,
-    additionalInformation: filtered,
+    result: filtered[0][0],
+    numberOfGames: filtered[0][1]
   };
 }

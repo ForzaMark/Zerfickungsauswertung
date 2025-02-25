@@ -1,23 +1,14 @@
 import { FixtureAndEventsResponseModel } from "../api-football/query-api-football";
-import { Statistic } from "./types/types";
 
-export function createGetMonthWithMostGames(): Statistic {
-  return {
-    title: "Allgemein",
-    description: "Monat mit meisten",
-    getGame: getNumberOfGames,
-  };
-}
-
-function getNumberOfGames(
+export function getMonthWithMostGames(
   allFixturesWithEvents: ReadonlyArray<FixtureAndEventsResponseModel>
 ): {
-  tweetText: string;
-  additionalInformation: unknown;
+  monthName: string;
+  gamesPerMonth: number;
 } {
-  const months = allFixturesWithEvents.flatMap(value => value.fixtures).map(({ fixture }) =>
-    new Date(fixture.fixture.date).getMonth()
-  );
+  const months = allFixturesWithEvents
+    .flatMap((value) => value.fixtures)
+    .map(({ fixture }) => new Date(fixture.fixture.date).getMonth());
 
   const numberOfDates = months.reduce(
     (acc, curr) => {
@@ -39,12 +30,17 @@ function getNumberOfGames(
     {} as { [month: number]: number }
   );
 
-  const filtered = Object.entries(numberOfDates)
-    .filter(([_key, value]) => value > 300)
-    .sort((a, b) => b[1] - a[1]);
+  const sorted = Object.entries(numberOfDates)
+    .map(([key, value]) => ({ monthZeroBased: key, gamesPerMonth: value }))
+    .sort((a, b) => b.gamesPerMonth - a.gamesPerMonth);
 
   return {
-    tweetText: `Months are zero based, month with most: ${filtered[0][0]}`,
-    additionalInformation: filtered,
+    monthName: new Date(2000, Number(sorted[0].monthZeroBased), 1).toLocaleString(
+      "default",
+      {
+        month: "long",
+      }
+    ),
+    gamesPerMonth: sorted[0].gamesPerMonth
   };
 }
